@@ -1,0 +1,245 @@
+\documentclass[a4paper, 11pt]{article}
+
+% Compiler avec XeLaTeX !!
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+
+\usepackage{unicode-math}
+\usepackage{polyglossia}
+\setmainlanguage{french}
+\usepackage{csquotes} % guillemets
+
+% Changer choix de police ? Palatino est plus assez hipster pour moi
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+\setmathfont{Asana-Math.otf}
+
+% Autres paquets à usage général
+%\usepackage{fullpage}
+%\usepackage{enumerate}
+%\usepackage{graphicx}
+
+
+%% Configuration propre à la logique linéaire
+
+% Arbres de preuves de séquents
+\usepackage{bussproofs}
+
+% Opérateurs propres à la logique linéaire
+% Mieux que le package cmll car ça utilise la bonne police avec unicode
+% tenseur = \otimes, ou additif = \oplus
+\newcommand{\avec}{\mathbin{\&}}
+\newcommand{\parr}{\mathbin{⅋}}
+
+
+\begin{document}
+
+\title{Logique linéaire et paradigmes logiques du calcul}
+\author{Cours MPRI 2.1}
+\date{2013--2014}
+
+\maketitle
+
+Synopsis du cours pompé sur la page web :
+
+Une analyse fine des calculs de séquents classiques et intuitionnistes permet de concevoir des logiques plus adaptées aux problèmes de l'informatique et de dévélopper, grâce à la correspondance de Curry-Howard des formalismes intermédiaires entre le $\lambda$-calcul et les vrais langages de programmation.
+
+Ce cours a pour but de donner une vision d'ensemble des motivations et des applications d'une de ces logiques, la Logique Linéaire, qui permet une analyse plus fine des processus de démonstration et de calcul, et d'introduire les notions de base des calculs intermédiaires les plus connus. On montrera dans le cours comment ces deux approches se rejoignent, à travers des interprétations calculatoires adaptées.
+
+Ce cours dédie une attention toute particulière aux aspects syntaxiques et calculatoires des formalismes logiques.
+
+
+Intervenants en 2013-2014 : Roberto di Cosmo, Delia Kesner\ldots ajouter calendrier ?
+
+
+Références :
+\begin{itemize}
+\item The Linear Logic Primer (Vincent Danos et Roberto Di Cosmo)
+\item Proof and Types (Jean-Yves Girard, traduit par Yves Lafont et Paul Taylor)
+\item more to come\ldots
+\end{itemize}
+
+Les titres des sections ne sont pas fixés. Les suggestions sont bienvenues.
+
+Dans la hiérarchie de la table des matières, on a
+\begin{itemize}
+\item Section $\simeq$ intervenant (ou thème)
+\item Sous-section $\simeq$ Séance de cours
+\item Sous-sous-section $\simeq$ partie au sein d'une séance
+\end{itemize}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction à la logique linéaire}
+
+\subsection{Du calcul des séquents à la logique linéaire}
+
+
+\subsubsection{Logique classique : le système LK de Gentzen}
+
+Règles structurelles\ldots
+
+Haupsatz : élimination des coupures.
+
+\subsubsection{Logique intuitionniste : le système LJ}
+
+\subsubsection{Le meilleur des deux mondes : la logique linéaire}
+
+Symétrie + interprétation fine (ressources).
+Logique sous-structurelle.
+
+\subsection{Le système LL}
+
+\subsubsection{Axiome et coupure}
+
+Axiome : \AxiomC{} \RightLabel{(Ax)} \UnaryInfC{$A \vdash A$} \DisplayProof
+
+Pas de contexte supplémentaire à gauche.
+
+Règle de la \emph{coupure} :
+\AxiomC{$\Gamma \vdash A, \Delta$}
+\AxiomC{$\Gamma', A \vdash \Delta'$}
+\RightLabel{(Cut)}
+\BinaryInfC{$\Gamma, \Gamma' \vdash \Delta, \Delta'$}
+\DisplayProof
+
+% Pour rendre les tableaux de règles plus agréables.
+\renewcommand{\arraystretch}{2}
+
+\subsubsection{Connecteurs multiplicatifs}
+$\otimes$ prononcé tenseur.
+$\parr$ prononcé par.
+
+\begin{tabular}{ l r }
+
+\AxiomC{$\Gamma, A, B, \vdash \Delta$}
+\RightLabel{($\otimes$L)}
+\UnaryInfC{$\Gamma, A \otimes B \vdash \Delta$}
+\DisplayProof
+
+&
+
+\AxiomC{$\Gamma  \vdash A, \Delta$}
+\AxiomC{$\Gamma' \vdash B, \Delta'$}
+\RightLabel{($\otimes$R)}
+\BinaryInfC{$\Gamma, \Gamma' \vdash A \otimes B, \Delta, \Delta'$}
+\DisplayProof
+
+\\
+
+\AxiomC{$\Gamma,  A \vdash \Delta$}
+\AxiomC{$\Gamma', B \vdash \Delta'$}
+\RightLabel{($\parr$L)}
+\BinaryInfC{$\Gamma, \Gamma', A \parr B \vdash \Delta, \Delta'$}
+\DisplayProof
+
+&
+
+\AxiomC{$\Gamma  \vdash A, B, \Delta$}
+\RightLabel{($\parr$R)}
+\UnaryInfC{$\Gamma, \vdash A \parr B, \Delta$}
+\DisplayProof
+
+\end{tabular}
+
+On voit la dualité.
+
+\subsubsection{Connecteurs additifs}
+
+\begin{tabular}{l}
+
+\AxiomC{$\Gamma, A \vdash \Delta$}
+\RightLabel{($\avec$L1)}
+\UnaryInfC{$\Gamma, A \avec B \vdash \Delta$}
+\DisplayProof
+
+\,
+
+\AxiomC{$\Gamma, B \vdash \Delta$}
+\RightLabel{($\avec$L2)}
+\UnaryInfC{$\Gamma, A \avec B \vdash \Delta$}
+\DisplayProof
+
+\qquad
+
+\AxiomC{$\Gamma \vdash A, \Delta$}
+\AxiomC{$\Gamma \vdash B, \Delta$}
+\RightLabel{($\avec$R)}
+\BinaryInfC{$\Gamma \vdash A \avec B, \Delta$}
+\DisplayProof
+
+\\
+
+\AxiomC{$\Gamma, A \vdash \Delta$}
+\AxiomC{$\Gamma, B \vdash \Delta$}
+\RightLabel{($\oplus$L)}
+\BinaryInfC{$\Gamma, A \oplus B \vdash \Delta$}
+\DisplayProof
+
+\qquad
+
+\AxiomC{$\Gamma \vdash A, \Delta$}
+\RightLabel{($\oplus$R1)}
+\UnaryInfC{$\Gamma \vdash A \oplus B, \Delta$}
+\DisplayProof
+
+\,
+
+\AxiomC{$\Gamma \vdash B, \Delta$}
+\RightLabel{($\oplus$R2)}
+\UnaryInfC{$\Gamma \vdash A \oplus B, \Delta$}
+\DisplayProof
+
+\end{tabular}
+
+\subsubsection{Modalités exponentielles et règles structurelles}
+
+$!\Gamma \vdash ?\Delta$ \ldots
+
+\subsubsection{Exemple classique : le menu de restaurant}
+
+recopier l'exemple du linear logic primer
+
+\subsection{Réseaux de preuve}
+
+Bureaucratie (terme girardien), oversequentiality, etc.
+Définition inductive des PN pour MLL.
+Proof structures.
+Nécessité de critères.
+Critère exponentiel : le long trip (noeuds $\to$ échangeurs).
+PN pour MELL : boîtes.
+
+\subsection{Critères de correction}
+
+\subsubsection{Premier critère : \enquote{long trip}}
+
+Présent dans l'article fondateur de Girard (?).
+
+Problème : trop compliqué ; exponentiel en le nombre de connecteurs.
+
+\subsubsection{ACC et contractibilité}
+
+
+
+\section{Les réseaux de preuve du point de vue calculatoire}
+
+\subsection{Réduction des réseaux de preuve}
+
+\subsubsection{\'Elimination des coupures}
+
+\subsubsection{Manipulation des modalités exponentielles}
+
+\subsection{Plongement de $\lambda$-calculs dans les réseaux de preuve : le $\lambda s$-calcul}
+
+Théorèmes de simulation, de PSN, etc. 
+
+\subsection{$\lambda$-calcul vers réseaux de preuve, la suite : le $\lambda x l r$-calcul}
+
+
+
+\end{document}
