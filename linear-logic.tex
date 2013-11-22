@@ -28,7 +28,8 @@
 % tenseur = \otimes, ou additif = \oplus
 \newcommand{\avec}{\mathbin{\&}}
 \newcommand{\parr}{\mathbin{⅋}}
-
+\newcommand{\ofcourse}{\mathord{!}}
+\newcommand{\whynot}{\mathord{?}}
 
 \begin{document}
 
@@ -138,7 +139,7 @@ Ces règles peuvent paraître anodines, elles semblent tomber sous le sens. Pour
 
 \paragraph{Règles logiques} Règles permettant l'introduction des connecteurs, manifestant ainsi dans la syntaxe des formules la structure du système logique. Pour avoir un équivalent des règles d'élimination de la déduction naturelle, utiliser intro + coupure.
 Copier depuis en bas.
-2 présentations, mult et add.
+2 présentations, mult et add. équivalence : emploie les règles structurelles.
 
 \paragraph{Quantification} Pour faire de la logique du 1er ordre.
 
@@ -159,7 +160,7 @@ Copier depuis en bas.
 \item Cette logique admet des modèles simples, les algèbres de Boole. Les formules valides en algèbre booléenne sont exactement celles démontrables en LK.
 \end{itemize}
 
-La propriété la plus important est la \emph{propriété de la sous-formule}, vérifiée par les preuves dites \emph{sans coupure}, celles qui ne font pas appel à la règle de coupure. Cette propriété est que la démonstration ne fait pas intervenir de formules \enquote{sorties de nulle part} : les formules intermédiaires de l'arbre de preuve sont contenues dans la conclusion.
+La propriété la plus importante est la \emph{propriété de la sous-formule}, vérifiée par les preuves dites \emph{sans coupure}, celles qui ne font pas appel à la règle de coupure. Cette propriété est que la démonstration ne fait pas intervenir de formules \enquote{sorties de nulle part} : les formules intermédiaires de l'arbre de preuve sont contenues dans la conclusion.
 
 Ce qui rend d'autant plus pertinent cette propriété est le théorème d'\emph{élimination des coupures} (ou Haupsatz\footnote{\enquote{théorème fondamental} en allemand} de Gentzen) :
 \[ \Gamma \vdash_{\mathrm{LK}} \Delta \Leftrightarrow 
@@ -177,7 +178,7 @@ Ce théorème permet de prouver la cohérence du système, c'est-à-dire l'absen
 \end{prooftree}
 or $\vdash A$ et $A \vdash$ ne peuvent être prouvés sans coupure.
 
-\paragraph{LK est non constructive} En LK, on peut obtenir des preuves d'existence sans pouvoir obtenir un témoin de cette existence. En voici un exemple célèbre, le \enquote{drinker paradox}\footnote{le nom est dû à l'interprétation suivante en langue naturelle : dans un bar (non vide), il y a quelqu'un tel que si cette personne boit, tout le monde boit.} $\exists x\, (P(x) \Rightarrow \forall y\, P(y))$.
+\paragraph{LK est non constructive} En LK, on peut obtenir des preuves d'existence sans pouvoir obtenir un témoin de cette existence. En voici un exemple célèbre, le \enquote{drinker paradox}\footnote{le nom est dû à l'interprétation suivante en langue naturelle : dans un bar (non vide), il y a quelqu'un tel que si cette personne boit, tout le monde boit.}, qui consiste en la formule : $\exists x\, (P(x) \Rightarrow \forall y\, P(y))$.
 
 Preuve à compléter.
 
@@ -195,30 +196,40 @@ Plutôt que de briser la symétrie, on peut s'y prendre en contrôlant les règl
 
 \subsubsection{Le meilleur des deux mondes : la logique linéaire}
 
+La logique linéaire repose sur une interprétation des formules en termes de \emph{ressources}.
+\begin{itemize}
+\item En logique classique, $A \Rightarrow B$ signifie simplement \enquote{si $A$, alors $B$}.
+\item En logique intuitionniste, on interprète\footnote{Il s'agit de l'interprétation dite de Brower--Heyting--Kolmogorov.} $A \Rightarrow B$ comme une fonction qui prend une preuve de $A$ et renvoie une preuve de $B$. On pourrait voir ça comme une machine qui transforme une machine productrice de $A$ en machine productrice de $B$.
+\item En logique linéaire, on a une notion de consommation : on va interpréter l'implication linéaire $A \multimap B$ comme \enquote{je consomme exactement 1 $A$, et je produis exactement 1 $B$}.
+\end{itemize}
+Selon cette interprétation \enquote{économique}, les règles de contraction et d'affaiblissement sont suspectes (on pourrait faire avec 1 $A$ la même chose qu'avec 2 $A$ ?). On va donc supprimer ces règles en logique linéaire.
 
+En reprenant les règles logiques du système LK, on verra que la logique linéaire restaure la symétrie et la dualité. Quid du tiers exclu ? En fait, en LL, il va y avoir deux connecteurs différents correspondant au \enquote{ou} logique, notés $\parr$ et $\oplus$. Le tiers exclu dépend du \enquote{ou} : on a $\vdash A \parr \neg A$, mais $\not\vdash A \oplus \neg A$ !
 
-Symétrie + interprétation fine (ressources).
-Logique sous-structurelle.
 
 \subsection{Le système LL}
 
+Souvenons-nous des deux présentations des règles logiques en LK. En l'absence des règles structurelles, elles ne sont pas équivalentes ; on va donc se retrouver avec 2 jeux de règles, les règles multiplicatives et les règles additives, définissant 2 \enquote{et} et 2 \enquote{ou} différents.
+
 \subsubsection{Axiome et coupure}
 
-Axiome : \AxiomC{} \RightLabel{(Ax)} \UnaryInfC{$A \vdash A$} \DisplayProof
+\paragraph{Axiome} S'écrit simplement\AxiomC{} \RightLabel{(Ax)} \UnaryInfC{$A \vdash A$} \DisplayProof \\
+Pas de contexte supplémentaire à gauche où à droite.
 
-Pas de contexte supplémentaire à gauche.
-
-Règle de la \emph{coupure} :
+\paragraph{Coupure}
 \AxiomC{$\Gamma \vdash A, \Delta$}
 \AxiomC{$\Gamma', A \vdash \Delta'$}
 \RightLabel{(Cut)}
 \BinaryInfC{$\Gamma, \Gamma' \vdash \Delta, \Delta'$}
 \DisplayProof
-
+: comme en LK
 
 \subsubsection{Connecteurs multiplicatifs}
-$\otimes$ prononcé tenseur.
-$\parr$ prononcé par.
+
+\begin{itemize}
+\item Le \enquote{et} multiplicatif est $\otimes$, prononcé \enquote{tenseur}.
+\item Le \enquote{ou} multiplicatif est $\parr$,   prononcé \enquote{par}.
+\end{itemize}
 
 \begin{tabular}{ l r }
 
@@ -252,9 +263,13 @@ $\parr$ prononcé par.
 
 \end{tabular}
 
-On voit la dualité.
 
 \subsubsection{Connecteurs additifs}
+
+\begin{itemize}
+\item Le \enquote{et} additif est $\avec$,  prononcé \enquote{avec}.
+\item Le \enquote{ou} additif est $\oplus$, prononcé (je sais pas ? somebody help me!).
+\end{itemize}
 
 \begin{tabular}{l}
 
@@ -302,15 +317,127 @@ On voit la dualité.
 
 \end{tabular}
 
+\subsubsection{Négation et implication}
+
+\paragraph{La négation} Elle ne change pas par rapport à LK : elle marque le passage entre les deux côtés du $\vdash$, et est involutive.
+
+\paragraph{L'implication linéaire} Notée $\multimap$, elle est donnée par les mêmes règles que l'implication classique. Elle est multiplicative. On a $A \multimap B \equiv \neg A \parr B$.
+
 \subsubsection{Modalités exponentielles et règles structurelles}
 
-$!\Gamma \vdash ?\Delta$ \ldots
+% Problème : le point d'exclamation colle à gauche plutôt qu'à droite !
 
-\subsubsection{Exemple classique : le menu de restaurant}
+De la même façon qu'il est possible d'encoder la logique classique dans la logique intuitionniste par \enquote{double-negation translation}, on voudrait pouvoir plonger LJ dans LL. Pour cela, il faudrait être capable de parler de ressources qui ne coûtent rien, telles les propositions vraies de la logique intuitionniste, qui restent valables après utilisation. On va donc réintroduire la contraction et l'affaiblissement, mais de manière contrôlée, en signalant leur champ d'applicabilité par des \emph{modalités} : (note : quelle est la prononciation ?)
+\begin{itemize}
+\item $\ofcourse A$ : \enquote{autant de $A$ qu'on veut}
+\item $\whynot A$ : \enquote{un $A$ jetable}
+\end{itemize}
+Bien entendu, $\ofcourse$ et $\whynot$ seront duaux. Grâce à ces modalités, on pourra exprimer l'implication intuitionniste $A \Rightarrow B = \ofcourse A \multimap B$, qui sera la traduction de l'implication de LJ.
 
-recopier l'exemple du linear logic primer
+% Noms des règles repris depuis l'article sur plato.stanford.edu
+
+\paragraph{Contraction}
+\AxiomC{$\Gamma, \ofcourse A, \ofcourse A \vdash\Delta$}
+\RightLabel{($\ofcourse$C)}
+\UnaryInfC{$\Gamma, \ofcourse A \vdash \Delta$}
+\DisplayProof
+\;
+\AxiomC{$\Gamma \vdash \whynot A, \whynot A, \Delta$}
+\RightLabel{($\whynot$C)}
+\UnaryInfC{$\Gamma \vdash \whynot A, \Delta$}
+\DisplayProof
+
+
+\paragraph{Affaiblissement} 
+\AxiomC{$\Gamma \vdash\Delta$}
+\RightLabel{($\ofcourse$W)}
+\UnaryInfC{$\Gamma, \ofcourse A \vdash \Delta$}
+\DisplayProof
+\;
+\AxiomC{$\Gamma \vdash \Delta$}
+\RightLabel{($\whynot$W)}
+\UnaryInfC{$\Gamma \vdash \whynot A, \Delta$}
+\DisplayProof
+
+\paragraph{Règles d'introduction}
+
+\begin{tabular}{ l r }
+
+\AxiomC{$\Gamma, A \vdash \Delta$}
+\RightLabel{($\ofcourse$L)}
+\UnaryInfC{$\Gamma, \ofcourse A \vdash \Delta$}
+\DisplayProof
+
+&
+
+\AxiomC{$\ofcourse \Gamma \vdash \whynot \Delta, A$}
+\RightLabel{($\ofcourse$R)}
+\UnaryInfC{$\ofcourse \Gamma \vdash \whynot \Delta, \ofcourse A$}
+\DisplayProof
+
+\\
+
+\AxiomC{$\ofcourse \Gamma, A \vdash \whynot \Delta$}
+\RightLabel{($\whynot$L)}
+\UnaryInfC{$\ofcourse \Gamma, \whynot A \vdash \whynot \Delta$}
+\DisplayProof
+
+&
+
+\AxiomC{$\Gamma  \vdash A, \Delta$}
+\RightLabel{R)}
+\UnaryInfC{$\Gamma, \vdash \whynot A, \Delta$}
+\DisplayProof
+
+\end{tabular}
+
+(Abréviation : si $\Gamma = A_1,\ldots,A_n$, $\ofcourse \Gamma = \ofcourse A_1, \ldots, \ofcourse A_n$.)
+
+Les règles $\ofcourse$L et $\whynot$R (qui sont duales) sont aussi appelées \emph{déréliction}.
+
+\subsubsection{Interprétation des connecteurs}
+
+$\parr$ : version symétrisée de l'implication (commutativité <-> contraposition).
+exemple du resto. 
+
+\subsubsection{Fragments de la logique linéaire}
+
+MLL, MALL, MELL, LL... définition + tous admettent l'élimination des coupures.
+
+Résultats de complexité pour la dérivabilité :
+\begin{itemize}
+\item dans MLL : NP-complet
+\item dans MALL : PSPACE-complet
+\item dans LL : indédicable
+\end{itemize}
+
+\subsubsection{Catégoricité des connecteurs}
+
+(sans lien avec la théorie des catégories)
+
+Un connecteur est dit \emph{catégorique} lorsqu'il est pleinement défini par ses règles d'introduction. C'est le cas des tous les connecteurs en MALL. Voici un exemple :
+
+\paragraph{Exercice :} on définit le connecteur $\ast$ par
+\AxiomC{$\Gamma,  A \vdash \Delta$}
+\AxiomC{$\Gamma', B \vdash \Delta'$}
+\BinaryInfC{$\Gamma, \Gamma', A \ast B \vdash \Delta, \Delta'$}
+\DisplayProof
+\;
+\AxiomC{$\Gamma  \vdash A, B, \Delta$}
+\UnaryInfC{$\Gamma, \vdash A \ast B, \Delta$}
+\DisplayProof \\
+Montrer que $\ast$ et $\parr$ sont équivalents.
+
+\paragraph{} Par contre, la catégoricité n'est pas vérifiée dans certaines logiques modales, par exemple LTL\footnote{Linear Temporal Logic.}. (c'est vrai ça ? les présentations de LTL n'emploient pas des règles d'inférences pour définir les connecteurs, de toute façon...)
+
+(exponentielles : catégoriques avec la bonne présentation ?)
+
+Une propriété formelle qui distingue les exponentielles des connecteurs MALL, c'est la présence de contraintes imposées sur le contexte dans les règles d'inférence. Par exemple, dans l'introduction du $\ofcourse$, le contexte à gauche doit être de la forme $\ofcourse \Gamma$, et le contexte à droite doit s'écrire $\whynot \Delta$.
+
 
 \subsection{Réseaux de preuve}
+
+Dessins ! 
 
 Bureaucratie (terme girardien), oversequentiality, etc.
 Définition inductive des PN pour MLL.
