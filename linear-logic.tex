@@ -141,6 +141,15 @@ Ces règles peuvent paraître anodines, elles semblent tomber sous le sens. Pour
 Copier depuis en bas.
 2 présentations, mult et add. équivalence : emploie les règles structurelles.
 
+\begin{prooftree}
+\AxiomC{$\Gamma, A \vdash \Delta$}
+\UnaryInfC{$\Gamma \vdash \neg A, \Delta$}  
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash A, \Delta$}
+\UnaryInfC{$\Gamma, \neg A \vdash \Delta$}  
+\end{prooftree}
+
 \paragraph{Quantification} Pour faire de la logique du 1er ordre.
 
 \paragraph{} Comme exemple, voici une preuve du tiers exclu sans hypothèse en LK :
@@ -434,8 +443,60 @@ Montrer que $\ast$ et $\parr$ sont équivalents.
 
 Une propriété formelle qui distingue les exponentielles des connecteurs MALL, c'est la présence de contraintes imposées sur le contexte dans les règles d'inférence. Par exemple, dans l'introduction du $\ofcourse$, le contexte à gauche doit être de la forme $\ofcourse \Gamma$, et le contexte à droite doit s'écrire $\whynot \Delta$.
 
+\subsubsection{Présentation asymétrique de LL}
 
-\subsection{Réseaux de preuve}
+En exploitant la symétrie, on va transformer les règles pour se ramener à un système où les séquents n'apparaissent qu'à droite. Par dualité, la moitié des règles est redondante, on peut ne garder que les règles droites. Puis on transforme $\Gamma \vdash \Delta$ en $\vdash \neg \Gamma, \Delta$ ; souvent, on peut purement et simplement effacer $\Gamma$.
+
+On se retrouve alors avec un problème avec la négation : comment convertir l'introduction de la négation ? Si on passe tout à droite :
+\begin{itemize}
+\item soit on obtient
+  \AxiomC{$\vdash \neg A, \Delta$}
+  \UnaryInfC{$\vdash \neg A, \Delta$}
+  \DisplayProof
+  ce qui est une profonde trivialité
+\item soit on obtient
+  \AxiomC{$\vdash A, \Delta$}
+  \UnaryInfC{$\vdash \neg \neg A, \Delta$}
+  \DisplayProof
+  qui ne permet d'introduire que des doubles négations : \\c'est pas terrible
+\end{itemize}
+Idée géniale : ne pas considérer la négation comme un connecteur, mais comme une opération !
+
+On va prendre pour univers des atomes un ensemble infini muni d'une involution $x \mapsto x^\perp$. La négation sera alors définie par induction structurelle :
+\begin{itemize}
+\item Cas de base : pour un atome $x$, $x^\perp$ est l'image $x$ par l'involution.
+\item Cas inductif :
+  \begin{itemize}
+  \item ${(F \otimes G)}^\perp = F^\perp \parr G^\perp$
+  \item ${(F \oplus  G)}^\perp = F^\perp \avec G^\perp$
+  \item etc.
+  \end{itemize}
+\end{itemize}
+Notons que si on remplace ${\_}^\perp$ par $\neg \_$, on obtient des règles dérivées dans LL. Mais ici, les égalités sont des \emph{définitions}.
+
+Ainsi, la négation devient une abréviation pour une formule où apparaissent des $\perp$ sur les atomes, elle n'existe plus comme \enquote{vrai} connecteur.
+
+Finalement, on se retrouve avec une seule règle d'introduction par connecteur (pour $\oplus$, il y a un couple d'introductions selon que $A \oplus B$ est déduit de $A$ ou de $B$). Le système obtenu, \emph{LL asymétrique}, qui est plus compact que LL mais prouve exactement la même chose :
+\[ \Gamma \vdash_{\mathrm{LL}} \Delta \quad \Longleftrightarrow \quad
+   \vdash_{\mathrm{LL\, asym.}} \neg \Gamma, \Delta \]
+
+La règle de coupure, qui s'écrit
+\AxiomC{$\vdash A, \Delta$}
+\AxiomC{$\vdash \Delta', A^\perp$}
+\UnaryInfC{$\vdash \Delta, \Delta'$}
+\DisplayProof,
+peut bien entendu être éliminée.
+
+\subsection{Réseaux de preuve et critères de correction}
+
+Les réseaux de preuve sont une représentation graphique pour calculer en logique linéaire multiplicative. On représente des preuves non plus comme des arbres, mais comme des hypergraphes orientés, dont :
+\begin{itemize}
+\item les sommets sont des formules ;
+\item les hyperarêtes sont des introductions de connecteurs.
+\end{itemize}
+
+
+\subsubsection{Définitions}
 
 Dessins ! 
 
@@ -446,8 +507,6 @@ Nécessité de critères.
 Critère exponentiel : le long trip (noeuds $\to$ échangeurs).
 PN pour MELL : boîtes.
 
-\subsection{Critères de correction}
-
 \subsubsection{Premier critère : \enquote{long trip}}
 
 Présent dans l'article fondateur de Girard (?).
@@ -456,6 +515,11 @@ Problème : trop compliqué ; exponentiel en le nombre de connecteurs.
 
 \subsubsection{ACC et contractibilité}
 
+\subsection{Pour aller plus loin}
+
+\subsubsection{Géométrie de l'interaction}
+
+\subsubsection{Réduction optimale}
 
 
 \section{Les réseaux de preuve du point de vue calculatoire}
