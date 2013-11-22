@@ -15,10 +15,7 @@
 \setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
 \setmathfont{Asana-Math.otf}
 
-% Autres paquets à usage général
-%\usepackage{fullpage}
-%\usepackage{enumerate}
-%\usepackage{graphicx}
+\usepackage{fullpage} % pour faire tenir les règles sur la page
 
 
 %% Configuration propre à la logique linéaire
@@ -40,6 +37,13 @@
 \date{2013--2014}
 
 \maketitle
+
+% Pour rendre les tableaux de règles avec tabular plus agréables.
+\renewcommand{\arraystretch}{2}
+
+
+
+BROUILLON TRES PRELIMINAIRE.
 
 Synopsis du cours pompé sur la page web :
 
@@ -83,17 +87,115 @@ Dans la hiérarchie de la table des matières, on a
 
 \subsection{Du calcul des séquents à la logique linéaire}
 
-L'histoire du programme de Hilbert et de son échec (théorème d'incomplétude) est bien connue. Vers la même période où Gödel montre l'impossibilité d'une preuve de cohérence de $PA$ (l'arithmétique de Peano) dans lui-même, Gentzen parvient à montrer que $PA$ est cohérente par une induction jusqu'à l'ordinal $\varepsilon_0$. Pour cela, il introduit des systèmes de preuves, la \emph{déduction naturelle} et le \emph{calcul des séquents}, et ramène l'absence de contradiction du système à la terminaison d'une procédure d'\emph{élimination des coupures} sur les preuves.
+L'histoire du programme de Hilbert et de son échec (théorème d'incomplétude) est bien connue. Vers la même période où Gödel montre l'impossibilité d'une preuve de cohérence de $PA$ (l'arithmétique de Peano) dans lui-même, Gentzen parvient à montrer que $PA$ est cohérente par une induction jusqu'à l'ordinal $\varepsilon_0$. Pour cela, il introduit des systèmes de preuves, la \emph{déduction naturelle} et le \emph{calcul des séquents}, et ramène l'absence de contradiction du système à la terminaison d'une procédure d'\emph{élimination des coupures} sur les preuves, s'approchant ainsi du rêve finitiste hilbertien. Contrairement aux systèmes dits \enquote{à la Hilbert}, ceux de Gentzen contiennent peu d'axiomes, mais beaucoup de règles de déduction.
+
+Les sytèmes de preuves que nous allons étudier sont constitués de règles formelles permettant de \emph{dériver} des \emph{jugements}. Un jugement est de la forme $\Gamma \vdash \Delta$, où $\Gamma$ et $\Delta$ sont des \emph{séquents}, c'est-à-dire des listes de formules de la forme $A_1, \ldots, A_n$. (Le symbole $\vdash$ s'appelle \enquote{turnstile} et est prononcé \enquote{thèse} en français.) $\Gamma \vdash \Delta$ signifie informellement \enquote{à partir des hypothèses $\Gamma$, on déduit les conclusions $\Delta$}, sachant que l'interprétation de la virgule et du turnstile sont à préciser en fonction du système.
+
+Les règles du calcul sont écrites sous la forme
+\begin{prooftree}
+\AxiomC{$A_1$}
+\AxiomC{$A_2$}
+\AxiomC{\ldots}
+\AxiomC{$A_n$}
+\RightLabel{\mbox{(nom de la règle)}}
+\QuaternaryInfC{$B$}
+\end{prooftree}
+où les $A_i$ et $B$ sont des jugements, la barre verticale signifiant \enquote{si les jugements $A_i$ sont valides, alors $B$ l'est}. En construisant un arbre dont les noeuds sont des applications de ces règles, on obtient une \emph{preuve} dans le système (aussi appelée dérivation).
+
+Commençons par le calcul des séquents qui se décline en variantes classique (LK) et intuitionniste (LJ).
 
 \subsubsection{Logique classique : le système LK de Gentzen}
 
-Règles structurelles\ldots
+En LK, $A_1, \ldots, A_n \vdash B_1, \ldots, B_m$ signifie \enquote{$A_1$ et $A_2$ \ldots et $A_n$ prouve $B_1$ ou $B_2$ \ldots ou $B_m$}, ou encore \enquote{si tous les $A_i$ sont vrais, l'un des $B_j$ sera vrai}. La virgule n'a pas la même signification des 2 côtés du turnstile !
 
-Haupsatz : élimination des coupures.
+Voici les règles du système LK :
+
+\paragraph{Axiome} L'axiome est la règle permettant d'introduire une prémisse présente dans la liste des hypothèse. C'est la seule règle sans \enquote{hypothèse}\footnote{il faudrait trouver un meilleur nom pour distinguer avec les hypothèses d'un jugement} : les feuilles d'un arbres de preuve sont obligatoirement des axiomes. \\
+Elle s'écrit
+\begin{prooftree}
+\AxiomC{}
+\RightLabel{(Ax)}
+\UnaryInfC{$\Gamma, A \vdash A, \Delta$}
+\end{prooftree}
+Interprétation : \ldots
+
+\paragraph{Coupure} Cette règle est en même temps essentielle et inutile (on verra pourquoi après). Elle correspond à l'emploi, dans la preuve d'un théorème, d'un lemme préalablement prouvé.
+Elle s'écrit :
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash A, \Delta$}
+\AxiomC{$\Gamma', A \vdash \Delta'$}
+\RightLabel{(Cut)}
+\BinaryInfC{$\Gamma, \Gamma' \vdash \Delta, \Delta'$}
+\end{prooftree}
+blabla pour préciser l'interprétation
+
+\paragraph{Règles structurelles} La flemme d'écrire ça\ldots échange + contraction + affaiblissement avec versions à gauche et à droite. Dans mes notes de cours, j'ai :
+\begin{itemize}
+\item contraction : l'immuabilité de la vérité permet d'utiliser des hypothèses plusieurs fois
+\item affaiblissement : élargir les hypothèses ; (permet de faire des manips sur le système lui-même ??)
+\end{itemize}
+Ces règles peuvent paraître anodines, elles semblent tomber sous le sens. Pourtant, elles vont se révéler très importante.
+
+\paragraph{Règles logiques} Règles permettant l'introduction des connecteurs, manifestant ainsi dans la syntaxe des formules la structure du système logique. Pour avoir un équivalent des règles d'élimination de la déduction naturelle, utiliser intro + coupure.
+Copier depuis en bas.
+2 présentations, mult et add.
+
+\paragraph{Quantification} Pour faire de la logique du 1er ordre.
+
+\paragraph{} Comme exemple, voici une preuve du tiers exclu sans hypothèse en LK :
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{(Ax)}
+  \UnaryInfC{$A \vdash A$}
+  \UnaryInfC{$\vdash A, \neg A$}
+  \RightLabel{($\lor_R$)}
+  \UnaryInfC{$\vdash A \lor \neg A$}
+\end{prooftree}
+
+\paragraph{Jolies propriétés du système LK} En voici quelques-unes simples :
+\begin{itemize}
+\item Il y a une symétrie dans le calcul entre les 2 côtés du $\vdash$, en passant entre les 2 par la négation. La symétrie se traduit aussi par la dualité entre les connecteurs $\land$ et $\lor$, dont les règles se déduisent en échangeant gauche et droite.
+\item La négation est une involution, i.e. $\neg\neg A \equiv A$.
+\item Cette logique admet des modèles simples, les algèbres de Boole. Les formules valides en algèbre booléenne sont exactement celles démontrables en LK.
+\end{itemize}
+
+La propriété la plus important est la \emph{propriété de la sous-formule}, vérifiée par les preuves dites \emph{sans coupure}, celles qui ne font pas appel à la règle de coupure. Cette propriété est que la démonstration ne fait pas intervenir de formules \enquote{sorties de nulle part} : les formules intermédiaires de l'arbre de preuve sont contenues dans la conclusion.
+
+Ce qui rend d'autant plus pertinent cette propriété est le théorème d'\emph{élimination des coupures} (ou Haupsatz\footnote{\enquote{théorème fondamental} en allemand} de Gentzen) :
+\[ \Gamma \vdash_{\mathrm{LK}} \Delta \Leftrightarrow 
+   \Gamma \vdash_{\mathrm{LK} \setminus \mathrm{Cut}} \Delta \]
+Autrement dit, tout jugement dérivable en LK admet une preuve sans coupure.
+
+Ce théorème permet de prouver la cohérence du système, c'est-à-dire l'absence de contradiction, qu'on pourrait formuler $\not\vdash A \land \neg A$. Une preuve sans coupure de $\vdash A \land \neg A$ devrait se terminer par
+\begin{prooftree}
+  \AxiomC{\vdots}
+  \UnaryInfC{$\vdash A$}
+  \AxiomC{\vdots}
+  \UnaryInfC{$A \vdash$}
+  \UnaryInfC{$\vdash \neg A$}
+  \BinaryInfC{$\vdash A \land \neg A$}
+\end{prooftree}
+or $\vdash A$ et $A \vdash$ ne peuvent être prouvés sans coupure.
+
+\paragraph{LK est non constructive} En LK, on peut obtenir des preuves d'existence sans pouvoir obtenir un témoin de cette existence. En voici un exemple célèbre, le \enquote{drinker paradox}\footnote{le nom est dû à l'interprétation suivante en langue naturelle : dans un bar (non vide), il y a quelqu'un tel que si cette personne boit, tout le monde boit.} $\exists x\, (P(x) \Rightarrow \forall y\, P(y))$.
+
+Preuve à compléter.
+
+\emph{Remarque importante :} on a employé de façon cruciale la règle d'affaiblissement ; c'est une indication du pouvoir insoupçonné des règles structurelles.
 
 \subsubsection{Logique intuitionniste : le système LJ}
 
+Pour obtenir une logique constructive, on peut procéder à une mutilation brutale des symétries de LK : on va interdire la présence de plusieurs formules à droite, ce qui restreint fortement la flexibilité des règles structurelles et de la manipulation de la négation. La logique obtenue ainsi est nommée LJ, c'est une formalisation de la logique \emph{intuitionniste} (elle est équivalente au système NJ de Prawitz, qui correspond au lambda-calcul typé). En LJ, un jugement est de la forme $\Gamma \vdash A$, où $\Gamma$ est un séquent et $A$ une formule, ou alors de la forme $\Gamma \vdash$.
+
+On obtient bien la constructivité, qui s'exprime par le théorème suivant : si $\Gamma \vdash A \lor B$, alors $\Gamma \vdash A$ ou $\Gamma \vdash B$. En particulier, $\not\vdash A \lor \neg A$ ; on pourra vérifier que la preuve du tiers exclu plus haut ne marche plus.
+
+Cependant, LJ a de nombreux inconvénients par rapport à LK. Tout d'abord, les modèles de la logique intuitionniste sont bien plus compliqués (modèles de Kripke, etc.). Surtout, on a perdu toute la symétrie : la gauche et la droite du $\vdash$ se comportent différemment, les connecteurs ne sont plus interdéfinissables, et la négation n'est plus involutive. Quel prix à payer !
+
+Plutôt que de briser la symétrie, on peut s'y prendre en contrôlant les règles structurelles : cette alternative s'appelle la \emph{logique linéaire}.
+
 \subsubsection{Le meilleur des deux mondes : la logique linéaire}
+
+
 
 Symétrie + interprétation fine (ressources).
 Logique sous-structurelle.
@@ -113,8 +215,6 @@ Règle de la \emph{coupure} :
 \BinaryInfC{$\Gamma, \Gamma' \vdash \Delta, \Delta'$}
 \DisplayProof
 
-% Pour rendre les tableaux de règles plus agréables.
-\renewcommand{\arraystretch}{2}
 
 \subsubsection{Connecteurs multiplicatifs}
 $\otimes$ prononcé tenseur.
