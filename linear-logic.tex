@@ -189,7 +189,16 @@ or $\vdash A$ et $A \vdash$ ne peuvent être prouvés sans coupure.
 
 \paragraph{LK est non constructive} En LK, on peut obtenir des preuves d'existence sans pouvoir obtenir un témoin de cette existence. En voici un exemple célèbre, le \enquote{drinker paradox}\footnote{le nom est dû à l'interprétation suivante en langue naturelle : dans un bar (non vide), il y a quelqu'un tel que si cette personne boit, tout le monde boit.}, qui consiste en la formule : $\exists x\, (P(x) \Rightarrow \forall y\, P(y))$.
 
-Preuve à compléter.
+\begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$P(x), P(z) \vdash P(z), \forall y . P(y)$}
+    \UnaryInfC{$P(x) \vdash P(z), P(z) \Rightarrow \forall y . P(y)$}
+    \UnaryInfC{$P(x) \vdash P(z), \exists x (P(x) \Rightarrow \forall y . P(y))$}
+    \UnaryInfC{$P(x) \vdash \forall y . P(y), \exists x. (P(x) \Rightarrow \forall y . P(y))$}
+    \UnaryInfC{$\vdash P(x) \Rightarrow \forall y . P(y), \exists x . (P(x) \Rightarrow \forall y . P(y))$}
+    \UnaryInfC{$\vdash \exists x . (P(x) \Rightarrow \forall y . P(y)), \exists x (P(y) \Rightarrow \forall y . P(y))$}
+    \UnaryInfC{$\vdash \exists x . (P(x) \Rightarrow \forall y . P(y))$}
+\end{prooftree}
 
 \emph{Remarque importante :} on a employé de façon cruciale la règle d'affaiblissement ; c'est une indication du pouvoir insoupçonné des règles structurelles.
 
