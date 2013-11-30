@@ -220,7 +220,7 @@ En reprenant les règles logiques du système LK, on verra que la logique linéa
 
 Souvenons-nous des deux présentations des règles logiques en LK. En l'absence des règles structurelles, elles ne sont pas équivalentes ; on va donc se retrouver avec 2 jeux de règles, les règles multiplicatives et les règles additives, définissant 2 \enquote{et} et 2 \enquote{ou} différents.
 
-\subsubsection{Axiome et coupure}
+\subsubsection{Règles logiques}
 
 \paragraph{Axiome} S'écrit simplement\AxiomC{} \RightLabel{(Ax)} \UnaryInfC{$A \vdash A$} \DisplayProof \\
 Pas de contexte supplémentaire à gauche où à droite.
@@ -233,7 +233,7 @@ Pas de contexte supplémentaire à gauche où à droite.
 \DisplayProof
 : comme en LK
 
-\subsubsection{Connecteurs multiplicatifs}
+\paragraph{Connecteurs multiplicatifs}
 
 \begin{itemize}
 \item Le \enquote{et} multiplicatif est $\otimes$, prononcé \enquote{tenseur}.
@@ -273,7 +273,7 @@ Pas de contexte supplémentaire à gauche où à droite.
 \end{tabular}
 
 
-\subsubsection{Connecteurs additifs}
+\paragraph{Connecteurs additifs}
 
 \begin{itemize}
 \item Le \enquote{et} additif est $\avec$,  prononcé \enquote{avec}.
@@ -326,15 +326,11 @@ Pas de contexte supplémentaire à gauche où à droite.
 
 \end{tabular}
 
-\subsubsection{Négation et implication}
-
 \paragraph{La négation} Elle ne change pas par rapport à LK : elle marque le passage entre les deux côtés du $\vdash$, et est involutive.
 
 \paragraph{L'implication linéaire} Notée $\multimap$, elle est donnée par les mêmes règles que l'implication classique. Elle est multiplicative. On a $A \multimap B \equiv \neg A \parr B$.
 
 \subsubsection{Modalités exponentielles et règles structurelles}
-
-% Problème : le point d'exclamation colle à gauche plutôt qu'à droite !
 
 De la même façon qu'il est possible d'encoder la logique classique dans la logique intuitionniste par \enquote{double-negation translation}, on voudrait pouvoir plonger LJ dans LL. Pour cela, il faudrait être capable de parler de ressources qui ne coûtent rien, telles les propositions vraies de la logique intuitionniste, qui restent valables après utilisation. On va donc réintroduire la contraction et l'affaiblissement, mais de manière contrôlée, en signalant leur champ d'applicabilité par des \emph{modalités} : (note : quelle est la prononciation ?)
 \begin{itemize}
@@ -476,16 +472,17 @@ Notons que si on remplace ${\_}^\perp$ par $\neg \_$, on obtient des règles dé
 
 Ainsi, la négation devient une abréviation pour une formule où apparaissent des $\perp$ sur les atomes, elle n'existe plus comme \enquote{vrai} connecteur.
 
-Finalement, on se retrouve avec une seule règle d'introduction par connecteur (pour $\oplus$, il y a un couple d'introductions selon que $A \oplus B$ est déduit de $A$ ou de $B$). Le système obtenu, \emph{LL asymétrique}, qui est plus compact que LL mais prouve exactement la même chose :
+Finalement, on se retrouve avec une seule règle d'introduction par connecteur (pour $\oplus$, il y a un couple d'introductions selon que $A \oplus B$ est déduit de $A$ ou de $B$). Le système obtenu, \emph{LL asymétrique}, est plus compact que LL mais prouve exactement la même chose :
 \[ \Gamma \vdash_{\mathrm{LL}} \Delta \quad \Longleftrightarrow \quad
    \vdash_{\mathrm{LL\, asym.}} \neg \Gamma, \Delta \]
 
 La règle de coupure, qui s'écrit
 \AxiomC{$\vdash A, \Delta$}
 \AxiomC{$\vdash \Delta', A^\perp$}
-\UnaryInfC{$\vdash \Delta, \Delta'$}
+\BinaryInfC{$\vdash \Delta, \Delta'$}
 \DisplayProof,
 peut bien entendu être éliminée.
+
 
 \subsection{Réseaux de preuve et critères de correction}
 
@@ -494,22 +491,46 @@ Les réseaux de preuve sont une représentation graphique pour calculer en logiq
 \item les sommets sont des formules ;
 \item les hyperarêtes sont des introductions de connecteurs.
 \end{itemize}
+Les formules apparaissant aux extrémités d'un réseau (c'est-à-dire les sommets de degré 1) de preuve constituent les conclusions de ce réseau.
+
+\subsubsection{Réseaux de preuve pour MLL}
+
+On définit inductivement les réseaux de preuve par : dessins.
+On voit facilement que ces règles correspondent aux règles d'introduction en MLL asymétrique, d'où le théorème suivant : $\vdash_{\mathrm{MLL}} \Gamma$ ssi il existe un réseau de preuve avec pour conséquences $\Gamma$.
+
+\paragraph{Qu'a-t-on gagné} Les réseaux de preuve permettent d'éliminer la \emph{bureaucratie} liée à la syntaxe.
+
+Un exemple simple : supposons qu'on ait démontré $\vdash A, B, A', B'$. Il y a 2 façons distinctes d'en déduire $\vdash A \parr B, A' \parr B'$:
+\begin{center}
+  \AxiomC{$\vdash A, B, A', B'$}
+  \UnaryInfC{$\vdash A \parr B, A', B'$}
+  \UnaryInfC{$\vdash A \parr B, A' \parr B'$}
+  \DisplayProof
+  \qquad
+  \AxiomC{$\vdash A, B, A', B'$}
+  \UnaryInfC{$\vdash A, B, A' \parr B'$}
+  \UnaryInfC{$\vdash A \parr B, A' \parr B'$}
+  \DisplayProof
+\end{center}
+Mais moralement, ces deux preuves sont les mêmes ! La présentation en \enquote{calcul des séquents}, où on doit introduire séquentiellement chaque connecteur, nous force à faire des distinctions sans pertinence. Les deux preuves ci-dessus sont identifiées à un seul réseau de preuve.
+
+Dessin.
+
+\paragraph{Quelles nouvelles difficultés ?} Il faut s'assurer de la validité des réseaux de preuve. 
+
+Avec les séquents, il était facile de vérifier la validité d'une preuve : il suffisait que les règles d'inférence soient appliquées correctement. La validité d'un réseau de preuve, quant à elle, pose problème. En effet, il existe des hypergraphes 
 
 
-\subsubsection{Définitions}
-
-Dessins ! 
-
-Bureaucratie (terme girardien), oversequentiality, etc.
-Définition inductive des PN pour MLL.
 Proof structures.
 Nécessité de critères.
 Critère exponentiel : le long trip (noeuds $\to$ échangeurs).
 PN pour MELL : boîtes.
 
+
+
 \subsubsection{Premier critère : \enquote{long trip}}
 
-Présent dans l'article fondateur de Girard (?).
+Ce critère apparaît dans l'article fondateur de Girard en 1987.
 
 Problème : trop compliqué ; exponentiel en le nombre de connecteurs.
 
@@ -526,7 +547,7 @@ Problème : trop compliqué ; exponentiel en le nombre de connecteurs.
 
 \subsection{Réduction des réseaux de preuve}
 
-\subsubsection{\'Elimination des coupures}
+\subsubsection{Élimination des coupures}
 
 \subsubsection{Manipulation des modalités exponentielles}
 
