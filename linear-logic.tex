@@ -742,21 +742,85 @@ Avec l'affaiblissement, il y a un souci : un réseau avec un affaiblissement n'e
 
 \section{Les réseaux de preuve du point de vue calculatoire}
 
+\newcommand{\lambdas}{{\lambda \mathtt{s}}}
+\newcommand{\lambdalxr}{{\lambda \mathtt{l x r}}}
+
+Dans cette partie :
+\begin{itemize}
+\item on voit comment se servir des réseaux de preuve pour calculer, c'est-à-dire éliminer les coupures
+\item on regarde des traductions de la logique intuitionniste dans la logique linéaire qui préservent le contenu calculatoire des preuves, i.e. une traduction du $\lambda$-calcul dans les réseaux de preuve \enquote{compatible} avec les réductions
+\end{itemize}
+
+En fait, on va passer par des langages intermédiaires, qui seront des $\lambda$-calculs à substitutions explicites.
+
 \subsection{Réduction des réseaux de preuve}
 
 \subsubsection{Élimination des coupures en MLL}
 
 Dessins !
 
-\subsubsection{Manipulation des modalités exponentielles}
+En résumé :
+\begin{itemize}
+\item axiome + coupure $\to$ rien (Girard : l'identité est une rallonge)
+\item coupure entre $A \otimes B$ et $B^\perp \parr A^\perp$ : convertie en 2 coupures ; ça fait augmenter le nombre de liens cut mais ils portent sur des formules plus petites, donc ça termine
+\end{itemize}
 
-Dessins !
+Ces réductions préservent les long trips : dessins. Donc, si le réseau de preuve de départ était valide, on obtient toujours une preuve valide des mêmes conclusions à la fin. D'où l'utilité des critères théoriques de correction.
 
-\subsection{Plongement de $\lambda$-calculs dans les réseaux de preuve : le $\lambda s$-calcul}
+\subsubsection{Élimination des coupures avec les exponentielles}
 
-Théorèmes de simulation, de PSN, etc. 
+Il faut rajouter des règles pour éliminer des coupures entre $\ofcourse A$ et $\whynot A^\perp$. La seule façon d'introduire un $\ofcourse$ est la boîte de promotion ; par contre, l'introduction d'un $\whynot$ peut être due à une contraction, un affaiblissement, ou une déréliction. On a droit à une règle pour chaque combinaison.
 
-\subsection{$\lambda$-calcul vers réseaux de preuve, la suite : le $\lambda x l r$-calcul}
+\subsubsection{Règles supplémentaires de manipulation des exponentielles}
+
+On voit ici des règles qui ne font pas intervenir la règle cut, mais servent de la même façon à simplifier les preuves.
+
+\subsection{Plongement de $\lambda$-calculs dans les réseaux de preuve : le $\lambdas$-calcul}
+
+En $\lambda$-calcul, la règle $\beta$ est donnée par une opération de méta-substitution extérieure au langage : $(\lambda x.\,t)\, u \to t\{x / u \}$.
+
+On a notamment $(u\,v)\{x/w\} = u\{x/w\}\,v\{x/w\}$ : la substitution est distribuée dans les sous-termes. Mais ceci va à l'encontre de la vision capitaliste de la logique linéaire : on a dupliqué, peut-être inutilement, une ressource.
+
+En $\lambda \mathtt{s}$-calcul, on donnera aux substitutions un statut de première classe dans le langage. Une substitution explicite sera notée $t[x/u]$. Intuition : un $\lambdas$-terme à substitution, c'est comme un réseau de preuve avec un lien coupure.
+
+Grammaire des termes de $\lambdas$ :
+
+En plus de l'équivalence à $\alpha$-renommage près, on ajoute une congruence pour faire commuter les substitutions indépendantes. Quant aux règles de réduction (évidemment compatibles avec la congruence), on a :
+\begin{itemize}
+\item La règle $B$ : $(\lambda x.\,t)\, u \to t[x/u]$.
+\item Les règles \texttt{s} : elles permettent de manipuler les substitutions, en faisant attention à ne pas distribuer inutilement sur une application.
+\item Le passage au contexte.
+\end{itemize}
+
+Le système \texttt{s} est terminant et confluent, tout terme a donc une unique forme normale ; fait, il est possible de définir inductivement une fonction qui la donne (exercice). Parmi les $\lambdas$-termes, les \texttt{s}-formes normales sont exactement les termes purs, i.e. les $\lambda$-termes sans substitutions explicites
+
+Passons maintenant à quelques propriétés intéressantes de $\lambdas$. (Preuves à compléter plus tard.)
+
+(Ajouter purification ? c'est dans les slides)
+
+\paragraph{Full composition} $t[x/u] \rightarrow_s^* t\{x/u\}$ pour tous termes $t$ et $u$, y compris pour $t$ non pur.
+
+Les règles essentielles pour avoir cette propriété sont les règles de composition (\texttt{Comp1} et \texttt{Comp2}).
+
+\paragraph{Simulation} Les réductions des termes purs existant en $\lambdas$-calcul peuvent être répercutées en $\lambda$-calcul. Autrement dit, si $t$ est un terme pur et $t \rightarrow_\beta t'$, alors $t \rightarrow_\lambdas^* t'$.
+
+La démonstration passe par le lemme suivant : si $t \rightarrow_\lambdas t'$, alors $\mathtt{s}(t) \rightarrow_\beta^* \mathtt{s}(t')$ (où $\mathtt{s}(t)$ est la purification de $t$). Ce lemme peut être prouvé par une induction faisant intervenir une longue disjonction de cas ; illustrons quelques exemples.
+
+\paragraph{Confluence} Le $\lambdas$-calcul est confluent.
+
+\enquote{Diagramme commutatif} de la preuve.
+
+Notons qu'on utilise le théorème de simulation.
+
+\paragraph{PSN} ou \enquote{preservation of strong normalisation} : tout $\lambda$-terme fortement normalisant en $\lambda$-calcul l'est aussi en $\lambdas$.
+
+Ce n'est pas vrai pour $\lambda \sigma$ par exemple (un contre-exemple a été trouvé par P. A. Mélliès (référence ?)).
+
+Un exemple de calcul à substitutions explicites très simple, où on perd PSN, est $\lambda \mathrm{x}$. Dans ce langage, on ne fait pas assez attention à distribuer les substitutions uniquement quand c'est pertinent. A partir de la règle de composition, on va pouvoir construire un terme qui, en se réduisant, construit des substitutions imbriquées de plus en plus profondément : recopier l'exemple depuis les slides.
+
+
+
+\subsection{$\lambda$-calcul vers réseaux de preuve, la suite : le $\lambdalxr$-calcul}
 
 
 
