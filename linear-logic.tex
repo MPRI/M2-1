@@ -17,6 +17,9 @@
 
 \usepackage{fullpage} % pour faire tenir les règles sur la page
 
+% TikZ for proof nets, graphs...
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 
 %% Configuration propre à la logique linéaire
 
@@ -558,7 +561,35 @@ Les formules apparaissant aux extrémités d'un réseau (c'est-à-dire les somme
 
 \subsubsection{Réseaux de preuve pour MLL}
 
-On définit inductivement les réseaux de preuve par : dessins.
+On définit inductivement les réseaux de preuve par :
+\begin{description}
+\item[Lien axiome (cas de base)] Pour toute formule $A$, on dispose d'un réseau de preuve
+  \begin{tikzpicture}
+    \node (a) {$A$};
+    \node (not a) [right of=a] {$A^\perp$};
+    \draw [rounded corners] (a.north) -- ++ (0,0.2) -| (not a.north);
+  \end{tikzpicture} \\
+dont les conclusions sont $A$ et $A^\perp$.
+\item[Lien coupure] Si $S$ est un réseau de conclusions $\Gamma, A$, et $S'$ un réseau de conclusions $A^\perp, \Gamma'$, alors (réseau à compléter)
+  \begin{center}
+    \begin{tikzpicture}
+      \draw [rounded corners] (a.south) -- ++ (0,-0.2) -| (not a.south);
+    \end{tikzpicture}
+  \end{center}
+  est un réseau de preuve de conclusions $\Gamma, \Gamma'$.
+\item[Lien tenseur] Si $S$ et $S'$ sont deux réseaux de preuve de conclusions respectives $\Gamma, A$ et $B, \Gamma'$, alors
+  \begin{center}
+    \begin{tikzpicture}
+    \end{tikzpicture}
+  \end{center}
+  est un réseau de preuve de conclusions $\Gamma, A \otimes B, \Gamma'$.
+\item[Lien par] Si $S$ est un réseau de preuve de conclusions $\Gamma, A, B$, alors
+  \begin{center}
+    \begin{tikzpicture}
+    \end{tikzpicture}
+  \end{center}
+est un réseau de preuve de conclusions $\Gamma, A \parr B$.
+\end{description}
 On voit facilement que ces règles correspondent aux règles d'introduction en MLL asymétrique, d'où le théorème suivant : $\vdash_{\mathrm{MLL}} \Gamma$ ssi il existe un réseau de preuve avec pour conséquences $\Gamma$.
 
 \paragraph{Qu'a-t-on gagné ?} Les réseaux de preuve permettent d'éliminer la \emph{bureaucratie} liée à la syntaxe.
@@ -598,12 +629,109 @@ Dessins !
 Ce critère apparaît dans l'article fondateur de Girard en 1987.
 
 
-\subsubsection{Critère de Danos--Regnier}
+\subsubsection{Critère(s) de Danos--Regnier}
+
+Les critères que nous allons voir ici reposent sur le passage des structures de preuve aux \emph{graphes appariés}.
+
+\paragraph{Définition} Un graphe apparié est un triplet $(V, E, C)$ où $(V,E)$ est un graphe et $C \subseteq E \times E$ est un ensemble de paires d'arêtes. On impose que :
+\begin{itemize}
+\item deux arêtes appariées partagent au moins 1 sommet
+\item les paries sont disjointes, i.e. chaque arête fait partie d'au plus une paire
+\end{itemize}
+Notation graphique : dessin
+
+\paragraph{Conversion des structures de preuve} Soit $S$ une structure de preuve. On définit $GA(S)$ par la traduction
+
+dessins
+
+L'appariement n'apparaît que pour un lien $\parr$.
+
+Ainsi, la coupure entre un tenseur et un par devient :
+
+On définit aussi l'ensemble des \emph{graphes de correction}, $GC(S)$, comme l'ensemble des graphes obtenus en enlevant une arête de chaque paire.
+
+Sur l'exemple ci-dessus, on obtient :
+
+dessin
+
+\paragraph{Critère ACC} Une structure de preuve $S$ est un réseau de preuve si et seulement si tous les graphes de correction sont acycliques et connexes.
+
+C'est exponentiel en le nombre de liens $\parr$, ce qui est déjà mieux que le long trip qui était exponentiel en le nombre de $\parr$ et de $\otimes$.
+
+\paragraph{Contractibilité} On peut améliorer le critère précédent en remarquant qu'on peut effectuer les opérations de contraction suivantes sur des graphes appariés sans affecter l'acyclicité ou la connexité (après retrait d'une arête de chaque paire).
+
+dessins
+
+Une structure de preuve $S$ est un réseau de preuve ssi, en itérant les opérations (1) et (2), on aboutit sur un unique noeud sans qu'il reste d'arête. (Attention : si on tombe sur un noeud seul avec une arête qui boucle, ce n'est pas un réseau de preuve !)
+
+Ce critère a une très bonne performance : à chaque itération, on supprime une arête, donc on voit bien qu'on peut exécuter ça en temps polynomial, et même en $O(n^2)$ (ce n'est pas tout à fait $O(n)$ car il faut aller chercher le rédex à chaque contraction). En pratique, il est possible d'implémenter ce critère en étant très proche du temps linéaire.
+
+\paragraph{Preuve des critères} Notre schéma de preuve sera
+\begin{enumerate}
+\item Réseau de preuve $\Rightarrow$ contractile
+\item Contractile $\Rightarrow$ ACC
+\item ACC $\Rightarrow$ réseau : c'est le plus dur
+\end{enumerate}
+
+(1) se prouve par induction structurelle sur le réseau de preuve.
+\begin{itemize}
+\item Le cas de base est le lien axiome : OK (dessins !)
+\item Cas $\otimes$ : blah
+\item Cas cut : c'est quasiment le même
+\item Cas $\parr$ : blah
+\end{itemize}
+
+Pour prouver (2), on dispose d'une suite de contractions qui aboutissent sur le graphe réduit à un noeud sans boucle, qui vérifie ACC. Il suffit de montrer que ACC est préservée par antiréduction.
+\begin{itemize}
+\item cas des arêtes appariées entre 2 même sommets : la transformation ne change pas les graphes de correction car on enlève une des deux arêtes appariées
+\item cas arête $\to$ sommet : il est clair que la connexité est préservée. S'il y a un cycle dans le graphe original, en contractant une arête, ce cycle en restera un. (Les boucles comptent comme des cycles.) Par contraposition, si le graphe contracté est acyclique, l'original le sera aussi. De même, la connexité est préservée.
+\end{itemize}
+
+Pour prouver (3), on a besoin du lemme suivant, démontré après :
+
+\paragraph{Lemme de paire split} Soit une paire $x_1 -- b -- x_2$ dans un graphe apparié. Si, dans le graphe privé de la paire, $b$ est déconnecté de $x_1$ et $x_2$, la paire est dite \emph{paire split}.
+
+\textbf{Lemme} : Considérons un graphe apparié \emph{fini} satisfaisant ACC. S'il contient au moins une paire, alors il contient au moins une paire split.
+
+L'intérêt des paires split, c'est que les enlever préserve ACC.
+
+\paragraph{Preuve de ACC $\Rightarrow$ réseau de preuve} La preuve va procéder par induction.
+
+Dans cette induction, il faudra gérer des morceaux de structure de preuve avec des hypothèses en entrée. Donc, ce qu'on va en fait montrer, c'est : si $S$ est une structure de preuve \emph{avec hypothèses} qui satisfait le critère ACC, alors $S$ est un réseau de preuve avec hypothèses.
+
+La récurrence procède d'abord sur le nombre de liens $\parr$ :
+\begin{itemize}
+\item Cas de base : $\#(\parr) = 0$
+  On refait une récurrence, cette fois-ci sur le nombre de liens $\otimes$.
+  \begin{itemize}
+  \item cas de base : $\#(\otimes) = 0$. On n'a ni $\parr$, ni $\otimes$, et la structure de preuve doit être acyclique et connexe. Les seules possibilités sont des enchaînements d'axiome et coupure avec une même formule $A$, avec éventuellement $A$ attendu en hypothèse. Ce sont des réseaux de preuve valides.
+  \item Cas inductif : $\#(\otimes) > 0$. blah
+  \end{itemize}
+\item Cas inductif : $\#(\parr) > 0$. On utilise le lemme paire split ici.
+\end{itemize}
+
+\paragraph{Démonstration du lemme paire split}
+
+cf. le linear logic primer. C'est tordu et il y a plein de définitions.
 
 
 \subsubsection{Graph parsing}
 
+C'est un critère issu de l'école italienne, dû à Guerrini, Masini et Martini. Il se base sur des règles de réécriture opérant directement sur les structures de preuve.
 
+Liste des règles (dessins).
+
+Comme on voit, c'est extrêmement intuitif.
+
+\paragraph{Théorème} Si la réduction aboutit sur $(NET) -- \Gamma$ alors le réseau de preuve est valide et prouve $\Gamma$.
+
+Malgré la simplicité du critère, la preuve est compliquée.
+
+Ce critère s'étend aux réseaux MELL, en gérant simplement les contractions, dérélictions et promotions comme suit :
+
+dessins
+
+Avec l'affaiblissement, il y a un souci : un réseau avec un affaiblissement n'est pas connexe. Astuce italienne : on peut faire remonter les affaiblissements dans les preuves jusqu'aux axiomes. On rajoute alors un axiome avec affaiblissement. Ca impose de rattacher l'affaiblissement à un axiome choisi arbitrairement.
 
 \subsection{Pour aller plus loin}
 
