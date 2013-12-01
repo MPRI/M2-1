@@ -416,7 +416,52 @@ Les règles $\ofcourse$L et $\whynot$R (qui sont duales) sont aussi appelées \e
 \subsubsection{Interprétation des connecteurs}
 
 $\parr$ : version symétrisée de l'implication (commutativité <-> contraposition).
-exemple du resto. 
+
+Voilà un exemple qui permet de saisir les différences entre les connecteurs de la logique linéaire :
+un menu dans un restaurant.
+
+{ \centering
+Menu à 75 Frs
+
+Entrée
+
+Quiche lorraine
+
+ou
+
+Saumon fumé
+
+et
+
+Plat
+
+Pot-au-feu
+
+ou
+
+Filet de canard
+
+et Fruit
+
+selon saison (banane ou raisin ou oranges ou ananas)
+
+ou
+
+Dessert au choix (mistère, glace, tarte aux pommes)
+
+}
+
+Traduit en logique linéaire, cela donne :
+
+$$75 FF^{\bot} \parr ((Q \avec S) \otimes (P \avec F) \otimes (B \oplus R \oplus O \oplus A) \otimes (M \avec G \avec T))$$ 
+
+Pour résumer :
+\begin{itemize}
+    \item $A \otimes B$ nous permet d'obtenir $A$ et $B$ simultanément
+    \item $A \avec B$ nous permet d'avoir soit $A$ soit $B$, et c'est nous qui choisissons lequel on obtient
+    \item $A \oplus B$ nous permet d'avoir soit $A$ soit $B$, mais on ne peut pas décider lequel on va obtenir
+    \item $A \parr B$ nous permet d'avoir $B$ si on donne un truc qui consomme $A$, c'est à dire $A^{\bot}$.
+\end{itemize}
 
 \subsubsection{Fragments de la logique linéaire}
 
