@@ -399,7 +399,7 @@ Bien entendu, $\ofcourse$ et $\whynot$ seront duaux. Grâce à ces modalités, o
 &
 
 \AxiomC{$\Gamma  \vdash A, \Delta$}
-\RightLabel{R)}
+\RightLabel{(?R)}
 \UnaryInfC{$\Gamma, \vdash \whynot A, \Delta$}
 \DisplayProof
 
@@ -407,16 +407,33 @@ Bien entendu, $\ofcourse$ et $\whynot$ seront duaux. Grâce à ces modalités, o
 
 (Abréviation : si $\Gamma = A_1,\ldots,A_n$, $\ofcourse \Gamma = \ofcourse A_1, \ldots, \ofcourse A_n$.)
 
-Les règles $\ofcourse$L et $\whynot$R (qui sont duales) sont aussi appelées \emph{déréliction}.
+Les règles d'introduction sont aussi appelées :
+\begin{itemize}
+\item \emph{déréliction} pour $\ofcourse$L et $\whynot$R
+\item \emph{promotion} pour $\whynot$L et $\ofcourse$R
+\end{itemize}
 
 \subsubsection{Interprétation des connecteurs}
 
-$\parr$ : version symétrisée de l'implication (commutativité <-> contraposition).
-exemple du resto. 
+Les connecteurs suivants disposent d'une interprétation simple en termes de ressources :
+\begin{itemize}
+\item $A \otimes B$ : je dispose à la fois d'un $A$ et d'un $B$
+\item $A \avec B$ : je peux choisir d'obtenir un $A$, ou choisir d'obtenir un $B$, mais pas les deux à la fois
+\item $A \oplus B$ : j'ai soit $A$ soit $B$ mais je ne sais pas lequel (c'est (vaguement) le \enquote{ou} intuitionniste)
+\end{itemize}
+
+On peut illustrer ceci par l'exemple classique du restaurant (à compléter).
+
+Le \enquote{par} est par contre plus difficile à expliquer avec du langage courant. On peut le voir comme une version symétrisée de l'implication : si j'ai $A \parr B$, j'aurai $A$ si j'ai déjà $B^\perp$, et j'aurai $B$ si j'ai déjà $A^\perp$. $A^\perp \multimap B \equiv A \parr B \equiv B \parr A \equiv B^\perp \multimap A$ : la commutativité de $\parr$ correspond à la contraposition.
 
 \subsubsection{Fragments de la logique linéaire}
 
-MLL, MALL, MELL, LL... définition + tous admettent l'élimination des coupures.
+\begin{itemize}
+\item MLL : logique linéaire multiplicative, ne contient que les connecteurs $\otimes$ et $\parr$
+\item MALL : LL sans exponentielles
+\item MELL : LL sans additifs
+\end{itemize}
+Tous ces fragments admettent l'élimination des coupures.
 
 Résultats de complexité pour la dérivabilité :
 \begin{itemize}
@@ -493,9 +510,9 @@ La règle de coupure, qui s'écrit
 peut bien entendu être éliminée.
 
 
-\subsection{Réseaux de preuve et critères de correction}
+\subsection{Réseaux de preuve}
 
-Les réseaux de preuve sont une représentation graphique pour calculer en logique linéaire multiplicative. On représente des preuves non plus comme des arbres, mais comme des hypergraphes orientés, dont :
+Les \emph{réseaux de preuve} sont une représentation graphique pour calculer en logique linéaire multiplicative. On représente des preuves non plus comme des arbres, mais comme des hypergraphes orientés, dont :
 \begin{itemize}
 \item les sommets sont des formules ;
 \item les hyperarêtes sont des introductions de connecteurs.
@@ -507,7 +524,7 @@ Les formules apparaissant aux extrémités d'un réseau (c'est-à-dire les somme
 On définit inductivement les réseaux de preuve par : dessins.
 On voit facilement que ces règles correspondent aux règles d'introduction en MLL asymétrique, d'où le théorème suivant : $\vdash_{\mathrm{MLL}} \Gamma$ ssi il existe un réseau de preuve avec pour conséquences $\Gamma$.
 
-\paragraph{Qu'a-t-on gagné} Les réseaux de preuve permettent d'éliminer la \emph{bureaucratie} liée à la syntaxe.
+\paragraph{Qu'a-t-on gagné ?} Les réseaux de preuve permettent d'éliminer la \emph{bureaucratie} liée à la syntaxe.
 
 Un exemple simple : supposons qu'on ait démontré $\vdash A, B, A', B'$. Il y a 2 façons distinctes d'en déduire $\vdash A \parr B, A' \parr B'$:
 \begin{center}
@@ -525,25 +542,31 @@ Mais moralement, ces deux preuves sont les mêmes ! La présentation en \enquote
 
 Dessin.
 
-\paragraph{Quelles nouvelles difficultés ?} Il faut s'assurer de la validité des réseaux de preuve. 
+\paragraph{Quelles nouvelles difficultés ?} On voudrait s'assurer de la validité des réseaux de preuve. En effet, un hypergraphe étiqueté par des formules n'est pas forcément issu des règles inductives de construction, rien ne garantit a priori qu'il constitue une preuve correcte. Voici un exemple de réseau qui a l'air \emph{localement} bon, mais qui ne l'est pas :
+\[ A \otimes B, A^\perp \otimes B^\perp \]
+Il faut donc un critère \emph{global} pour distinguer les faux réseaux, qu'on nommera \emph{structures de preuve}, des vrais. (Contraster avec la déduction naturelle, qui n'a besoin que de vérifications locale\ldots)
 
-Avec les séquents, il était facile de vérifier la validité d'une preuve : il suffisait que les règles d'inférence soient appliquées correctement. La validité d'un réseau de preuve, quant à elle, pose problème. En effet, il existe des hypergraphes 
+
+\subsubsection{Réseaux de preuve pour MELL}
+
+Dessins !
 
 
-Proof structures.
-Nécessité de critères.
-Critère exponentiel : le long trip (noeuds $\to$ échangeurs).
-PN pour MELL : boîtes.
 
+\subsection{Critères de correction pour les réseaux de preuve}
 
 
 \subsubsection{Premier critère : \enquote{long trip}}
 
 Ce critère apparaît dans l'article fondateur de Girard en 1987.
 
-Problème : trop compliqué ; exponentiel en le nombre de connecteurs.
 
-\subsubsection{ACC et contractibilité}
+\subsubsection{Critère de Danos--Regnier}
+
+
+\subsubsection{Graph parsing}
+
+
 
 \subsection{Pour aller plus loin}
 
@@ -556,9 +579,13 @@ Problème : trop compliqué ; exponentiel en le nombre de connecteurs.
 
 \subsection{Réduction des réseaux de preuve}
 
-\subsubsection{Élimination des coupures}
+\subsubsection{Élimination des coupures en MLL}
+
+Dessins !
 
 \subsubsection{Manipulation des modalités exponentielles}
+
+Dessins !
 
 \subsection{Plongement de $\lambda$-calculs dans les réseaux de preuve : le $\lambda s$-calcul}
 
