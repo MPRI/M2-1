@@ -235,7 +235,7 @@ Souvenons-nous des deux présentations des règles logiques en LK. En l'absence 
 \subsubsection{Règles logiques}
 
 \paragraph{Axiome} S'écrit simplement\AxiomC{} \RightLabel{(Ax)} \UnaryInfC{$A \vdash A$} \DisplayProof \\
-Pas de contexte supplémentaire à gauche où à droite.
+Pas de contexte supplémentaire à gauche ou à droite.
 
 \paragraph{Coupure}
 \AxiomC{$\Gamma \vdash A, \Delta$}
@@ -279,7 +279,7 @@ Pas de contexte supplémentaire à gauche où à droite.
 
 \AxiomC{$\Gamma  \vdash A, B, \Delta$}
 \RightLabel{($\parr$R)}
-\UnaryInfC{$\Gamma, \vdash A \parr B, \Delta$}
+\UnaryInfC{$\Gamma \vdash A \parr B, \Delta$}
 \DisplayProof
 
 \end{tabular}
@@ -479,7 +479,7 @@ Résultats de complexité pour la dérivabilité :
 \begin{itemize}
 \item dans MLL : NP-complet
 \item dans MALL : PSPACE-complet
-\item dans LL : indédicable
+\item dans LL : indécidable %indédicable. Hello google.
 \end{itemize}
 
 \subsubsection{Catégoricité des connecteurs}
