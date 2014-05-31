@@ -203,15 +203,15 @@ or $\vdash A$ et $A \vdash$ ne peuvent être prouvés sans coupure.
     \UnaryInfC{$\vdash \exists x . (P(x) \Rightarrow \forall y . P(y))$}
 \end{prooftree}
 
-\emph{Remarque importante :} on a employé de façon cruciale la règle d'affaiblissement ; c'est une indication du pouvoir insoupçonné des règles structurelles.
+\emph{Remarque importante :} on a employé de façon cruciale la règle de contraction ; c'est une indication du pouvoir insoupçonné des règles structurelles. (Notez que la contraction permet de passer de $\neg A \vdash A$ à $\vdash A$ : c'est le raisonnement par l'absurde !)
 
 \subsubsection{Logique intuitionniste : le système LJ}
 
 Pour obtenir une logique constructive, on peut procéder à une mutilation brutale des symétries de LK : on va interdire la présence de plusieurs formules à droite, ce qui restreint fortement la flexibilité des règles structurelles et de la manipulation de la négation. La logique obtenue ainsi est nommée LJ, c'est une formalisation de la logique \emph{intuitionniste} (elle est équivalente au système NJ de Prawitz, qui correspond au lambda-calcul typé). En LJ, un jugement est de la forme $\Gamma \vdash A$, où $\Gamma$ est un séquent et $A$ une formule, ou alors de la forme $\Gamma \vdash$.
 
-On obtient bien la constructivité, qui s'exprime par le théorème suivant : si $\Gamma \vdash A \lor B$, alors $\Gamma \vdash A$ ou $\Gamma \vdash B$. En particulier, $\not\vdash A \lor \neg A$ ; on pourra vérifier que la preuve du tiers exclu plus haut ne marche plus.
+On obtient bien la constructivité, qui s'exprime par le théorème suivant (\emph{propriété de la disjonction}) : si $\Gamma \vdash A \lor B$, alors $\Gamma \vdash A$ ou $\Gamma \vdash B$. En particulier, $\not\vdash A \lor \neg A$ ; on pourra vérifier que la preuve du tiers exclu plus haut ne marche plus.
 
-Cependant, LJ a de nombreux inconvénients par rapport à LK. Tout d'abord, les modèles de la logique intuitionniste sont bien plus compliqués (modèles de Kripke, etc.). Surtout, on a perdu toute la symétrie : la gauche et la droite du $\vdash$ se comportent différemment, les connecteurs ne sont plus interdéfinissables, et la négation n'est plus involutive. Quel prix à payer !
+Cependant, LJ a de nombreux inconvénients par rapport à LK. Tout d'abord, les modèles de la logique intuitionniste sont bien plus compliqués (modèles de Kripke, etc.). Surtout, on a perdu toute la symétrie : la gauche et la droite du $\vdash$ se comportent différemment, les connecteurs ne sont plus interdéfinissables, et la négation n'est plus involutive. Quel prix à payer !\footnote{Paul-André Melliès considère que l'insistance de la logique linéaire sur la négation involutive est malavisée. Cf. les travaux sur la logique tensorielle.}
 
 Plutôt que de briser la symétrie, on peut s'y prendre en contrôlant les règles structurelles : cette alternative s'appelle la \emph{logique linéaire}.
 
@@ -340,7 +340,19 @@ Pas de contexte supplémentaire à gauche ou à droite.
 
 \paragraph{La négation} Elle ne change pas par rapport à LK : elle marque le passage entre les deux côtés du $\vdash$, et est involutive.
 
-\paragraph{L'implication linéaire} Notée $\multimap$, elle est donnée par les mêmes règles que l'implication classique. Elle est multiplicative. On a $A \multimap B \equiv \neg A \parr B$.
+\paragraph{L'implication linéaire} Notée $\multimap$ (lollipop), elle est donnée par les mêmes règles que l'implication classique. Elle est multiplicative. On a $A \multimap B \equiv \neg A \parr B$.
+
+\AxiomC{$\Gamma \vdash A, \Delta$}
+\AxiomC{$\Gamma', B \vdash \Delta'$}
+\RightLabel{($\multimap$L)}
+\BinaryInfC{$\Gamma, \Gamma', A \multimap B \vdash \Delta, \Delta'$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma, A \vdash B, \Delta$}
+\RightLabel{($\parr$R)}
+\UnaryInfC{$\Gamma \vdash A \multimap B, \Delta$}
+\DisplayProof
+
 
 \subsubsection{Modalités exponentielles et règles structurelles}
 
@@ -461,7 +473,8 @@ Pour résumer :
     \item $A \otimes B$ nous permet d'obtenir $A$ et $B$ simultanément
     \item $A \avec B$ nous permet d'avoir soit $A$ soit $B$, et c'est nous qui choisissons lequel on obtient
     \item $A \oplus B$ nous permet d'avoir soit $A$ soit $B$, mais on ne peut pas décider lequel on va obtenir
-    \item $A \parr B$ nous permet d'avoir $B$ si on donne un truc qui consomme $A$, c'est à dire $A^{\bot}$.
+    \item $A \parr B$ nous permet d'avoir $B$ si on donne un truc qui consomme $A$, c'est à dire $A^{\bot}$, et vice-versa
+    \item $A \multimap B$ nous permet de transformer un $A$ en $B$
 \end{itemize}
 
 Le \enquote{par} est plus difficile à expliquer avec du langage courant. On peut le voir comme une version symétrisée de l'implication : si j'ai $A \parr B$, j'aurai $A$ si j'ai déjà $B^\perp$, et j'aurai $B$ si j'ai déjà $A^\perp$. $A^\perp \multimap B \equiv A \parr B \equiv B \parr A \equiv B^\perp \multimap A$ : la commutativité de $\parr$ correspond à la contraposition.
