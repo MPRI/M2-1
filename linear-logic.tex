@@ -133,12 +133,30 @@ Elle s'écrit :
 \end{prooftree}
 blabla pour préciser l'interprétation
 
-\paragraph{Règles structurelles} La flemme d'écrire ça\ldots échange + contraction + affaiblissement avec versions à gauche et à droite. Dans mes notes de cours, j'ai :
+\paragraph{Règles structurelles} Il y en a 3 :
+
+\AxiomC{$\Gamma,  A, A \vdash\Delta$}
+\RightLabel{(CL)}
+\UnaryInfC{$\Gamma, A \vdash \Delta$}
+\DisplayProof
+\qquad
+\AxiomC{$\Gamma \vdash\Delta$}
+\RightLabel{(WL)}
+\UnaryInfC{$\Gamma, A \vdash \Delta$}
+\DisplayProof
+\qquad
+\AxiomC{$\Gamma, A, B, \Gamma' \vdash \Delta$}
+\RightLabel{(EL)}
+\UnaryInfC{$\Gamma, B, A, \Gamma' \vdash \Delta$}
+\DisplayProof
+
+Commentaires :
 \begin{itemize}
-\item contraction : l'immuabilité de la vérité permet d'utiliser des hypothèses plusieurs fois
-\item affaiblissement : élargir les hypothèses ; (permet de faire des manips sur le système lui-même ??)
+\item La \emph{contraction} exprime l'immuabilité de la vérité : elle permet d'utiliser des hypothèses plusieurs fois. 
+\item L'\emph{affaiblissement} permet élargir les hypothèses ; (permet de faire des manips sur le système lui-même ??)
+\item La règle d'\emph{échange} exprime la commutativité des séquents.
 \end{itemize}
-Ces règles peuvent paraître anodines, elles semblent tomber sous le sens. Pourtant, elles vont se révéler très importante.
+Ces règles peuvent paraître anodines, elles semblent tomber sous le sens. Pourtant, elles vont se révéler très importantes. (Sauf la règle d'échange : on considèrera que les séquents sont des multi-ensembles non-ordonnés de formules.)\footnote{Toutefois, il y a une connexion entre réseaux de preuve non commutatifs et syllogismes aristotéliciens : voir par ex. Le point aveugle}
 
 \paragraph{Règles logiques} Règles permettant l'introduction des connecteurs, manifestant ainsi dans la syntaxe des formules la structure du système logique. Pour avoir un équivalent des règles d'élimination de la déduction naturelle, utiliser intro + coupure.
 Copier depuis en bas.
